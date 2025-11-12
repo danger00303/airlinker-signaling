@@ -17,6 +17,17 @@ const progressFill = document.getElementById('progressFill');
 const progressText = document.getElementById('progressText');
 const fileNameLabel = document.getElementById('fileName');
 const fileSizeLabel = document.getElementById('fileSize');
+// ===== Receiver UI Elements =====
+const receiverProgress = document.getElementById('receiverProgress');
+const receiverProgressFill = document.getElementById('receiverProgressFill');
+const receiverProgressText = document.getElementById('receiverProgressText');
+const receiverFileName = document.getElementById('receiverFileName');
+const receiverFileSize = document.getElementById('receiverFileSize');
+const receiverView = document.getElementById('receiverView');
+const senderView = document.getElementById('senderView');
+const connectingState = document.getElementById('connectingState');
+const receiverComplete = document.getElementById('receiverComplete');
+
 
 let ws, pc, dc, sessionId, fileToSend;
 let receivedChunks = [];
@@ -212,37 +223,54 @@ async function sendFile() {
 }
 
 function handleIncomingChunk(e) {
+  // --- Metadata (first message)
   if (typeof e.data === 'string') {
-    // The first message is metadata (filename + size)
     const meta = JSON.parse(e.data);
     receivedChunks = [];
     receivedChunks.expectedName = meta.name;
     receivedChunks.expectedSize = meta.size;
-    log(`Receiving ${meta.name} (${formatBytes(meta.size)})...`);
 
-    // Reset progress UI
-    progressFill.style.width = '0%';
-    progressText.textContent = '0%';
-    fileNameLabel.textContent = meta.name;
-    fileSizeLabel.textContent = formatBytes(meta.size);
+    // Switch to receiver view
+    if (senderView) senderView.classList.add('hidden');
+    if (receiverView) receiverView.classList.remove('hidden');
+    if (connectingState) connectingState.classList.add('hidden');
+    if (receiverProgress) receiverProgress.classList.remove('hidden');
+    if (receiverComplete) receiverComplete.classList.add('hidden');
+
+    // Update receiver info
+    receiverFileName.textContent = meta.name;
+    receiverFileSize.textContent = formatBytes(meta.size);
+    receiverProgressFill.style.width = '0%';
+    receiverProgressText.textContent = '0%';
+
+    log(`Receiving ${meta.name} (${formatBytes(meta.size)})...`);
     return;
   }
 
-  // Binary chunk received
+  // --- Binary data chunk
   receivedChunks.push(e.data);
 
   const receivedSize = receivedChunks.reduce((a, b) => a + b.byteLength, 0);
   const pct = Math.floor((receivedSize / receivedChunks.expectedSize) * 100);
 
-  // Update UI on receiver
-  progressFill.style.width = pct + '%';
-  progressText.textContent = pct + '%';
+  receiverProgressFill.style.width = pct + '%';
+  receiverProgressText.textContent = `${pct}%`;
 
-  // When finished
+  // --- When done
   if (receivedSize >= receivedChunks.expectedSize) {
-    saveReceivedFile();
+    const blob = new Blob(receivedChunks);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = receivedChunks.expectedName || 'download.bin';
+    a.click();
+
+    // Update UI
+    receiverProgress.classList.add('hidden');
+    receiverComplete.classList.remove('hidden');
+    log('File received and saved.');
   }
 }
+
 
 function saveReceivedFile() {
   const blob = new Blob(receivedChunks);
