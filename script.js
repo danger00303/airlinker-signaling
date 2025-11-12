@@ -123,10 +123,15 @@ async function handleSignal(msg) {
     return;
   }
 
-  // Receiver: got offer
+  // Receiver: got offer (only receiver handles this)
   if (msg.type === 'offer' && msg.sdp) {
+    if (dc) {
+      // This means you're the sender, ignore your own offer
+      console.warn('Ignoring duplicate offer on sender side');
+      return;
+    }
+
     log('Received offer from sender');
-    createPeer(); // ensure peer exists
     await pc.setRemoteDescription({ type: 'offer', sdp: msg.sdp });
     const answer = await pc.createAnswer();
     await pc.setLocalDescription(answer);
@@ -137,13 +142,19 @@ async function handleSignal(msg) {
 
   // Sender: got answer
   if (msg.type === 'answer' && msg.sdp) {
+    // Avoid setting remote description twice
+    if (pc.signalingState === 'stable') {
+      console.warn('Ignoring duplicate answer (already stable)');
+      return;
+    }
+
     log('Received answer, establishing connection...');
     await pc.setRemoteDescription({ type: 'answer', sdp: msg.sdp });
     log('Peer connection established');
     return;
   }
 
-  // Both: ICE exchange
+  // ICE candidates
   if (msg.type === 'ice-candidate' && msg.candidate) {
     try {
       await pc.addIceCandidate(msg.candidate);
