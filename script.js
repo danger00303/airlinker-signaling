@@ -196,21 +196,32 @@ async function sendFile() {
 
 function handleIncomingChunk(e) {
   if (typeof e.data === 'string') {
+    // The first message is metadata (filename + size)
     const meta = JSON.parse(e.data);
     receivedChunks = [];
     receivedChunks.expectedName = meta.name;
     receivedChunks.expectedSize = meta.size;
     log(`Receiving ${meta.name} (${formatBytes(meta.size)})...`);
+
+    // Reset progress UI
+    progressFill.style.width = '0%';
+    progressText.textContent = '0%';
+    fileNameLabel.textContent = meta.name;
+    fileSizeLabel.textContent = formatBytes(meta.size);
     return;
   }
 
+  // Binary chunk received
   receivedChunks.push(e.data);
 
   const receivedSize = receivedChunks.reduce((a, b) => a + b.byteLength, 0);
   const pct = Math.floor((receivedSize / receivedChunks.expectedSize) * 100);
+
+  // Update UI on receiver
   progressFill.style.width = pct + '%';
   progressText.textContent = pct + '%';
 
+  // When finished
   if (receivedSize >= receivedChunks.expectedSize) {
     saveReceivedFile();
   }
