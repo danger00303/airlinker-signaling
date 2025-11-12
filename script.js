@@ -41,8 +41,8 @@ function formatBytes(bytes) {
 function createPeer() {
   pc = new RTCPeerConnection({
     iceServers: [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
+      { urls: ['stun:stun.l.google.com:19302'] },
+      { urls: ['stun:global.stun.twilio.com:3478'] }
     ]
   });
 
@@ -64,6 +64,7 @@ function createPeer() {
   };
 }
 
+
 function createDataChannel() {
   dc = pc.createDataChannel('file');
   dc.binaryType = 'arraybuffer';
@@ -83,7 +84,18 @@ async function connectWS() {
       resolve();
     };
     ws.onerror = reject;
-    ws.onmessage = (e) => handleSignal(JSON.parse(e.data));
+    ws.onmessage = async (e) => {
+  try {
+    // WebSocket data might arrive as Blob (binary), not JSON text
+    const data = typeof e.data === 'string'
+      ? e.data
+      : await e.data.text();
+    const msg = JSON.parse(data);
+    handleSignal(msg);
+  } catch (err) {
+    console.warn('Non-JSON WebSocket message ignored:', e.data);
+  }
+};
   });
 }
 
