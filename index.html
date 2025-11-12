@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirLink - P2P File Transfer</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 4L4 10V22L16 28L28 22V10L16 4Z" stroke="#007AFF" stroke-width="1.5" stroke-linejoin="round"/>
+                    <path d="M16 16L4 10" stroke="#007AFF" stroke-width="1.5" stroke-linejoin="round"/>
+                    <path d="M16 16V28" stroke="#007AFF" stroke-width="1.5" stroke-linejoin="round"/>
+                    <path d="M16 16L28 10" stroke="#007AFF" stroke-width="1.5" stroke-linejoin="round"/>
+                </svg>
+                <span>AirLink</span>
+            </div>
+            <p class="tagline">Secure peer-to-peer file transfer</p>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="mainContent">
+            <!-- Sender View -->
+            <div id="senderView" class="view">
+                <div class="upload-area" id="uploadArea">
+                    <svg class="upload-icon" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M32 44V20M32 20L22 30M32 20L42 30" stroke="#007AFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M52 44V52C52 53.1046 51.1046 54 50 54H14C12.8954 54 12 53.1046 12 52V44" stroke="#007AFF" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h2>Select a file to share</h2>
+                    <p>Any file type, any size</p>
+                    <input type="file" id="fileInput" hidden>
+                    <button class="primary-button" id="selectFileBtn">Choose File</button>
+                </div>
+
+                <!-- QR Code Display -->
+                <div id="qrSection" class="hidden">
+                    <div class="file-info">
+                        <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M13 2V9H20" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="file-details">
+                            <div class="file-name" id="fileName">filename.pdf</div>
+                            <div class="file-size" id="fileSize">2.4 MB</div>
+                        </div>
+                    </div>
+
+                    <div class="qr-container">
+                        <div id="qrcode"></div>
+                    </div>
+                    
+                    <p class="instruction">Scan this code with another device</p>
+                    
+                    <div class="connection-status" id="connectionStatus">
+                        <div class="status-dot"></div>
+                        <span id="statusText">Waiting for receiver...</span>
+                    </div>
+
+                    <button class="secondary-button" id="cancelBtn">Cancel</button>
+                </div>
+
+                <!-- Progress View -->
+                <div id="progressSection" class="hidden">
+                    <div class="progress-info">
+                        <svg class="progress-icon" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="20" stroke="#007AFF" stroke-width="2"/>
+                            <path d="M24 14V24L30 30" stroke="#007AFF" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <h3 id="progressTitle">Sending file...</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p class="progress-text" id="progressText">0%</p>
+                    </div>
+                </div>
+
+                <!-- Complete View -->
+                <div id="completeSection" class="hidden">
+                    <svg class="success-icon" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="32" cy="32" r="28" stroke="#34C759" stroke-width="2"/>
+                        <path d="M20 32L28 40L44 24" stroke="#34C759" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h2>Transfer complete!</h2>
+                    <button class="primary-button" id="sendAnotherBtn">Send Another File</button>
+                </div>
+            </div>
+
+            <!-- Receiver View -->
+            <div id="receiverView" class="view hidden">
+                <div class="connecting-state" id="connectingState">
+                    <div class="spinner"></div>
+                    <h2>Connecting to sender...</h2>
+                    <p>Please wait</p>
+                </div>
+
+                <!-- Receiver Progress -->
+                <div id="receiverProgress" class="hidden">
+                    <div class="file-info">
+                        <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M13 2V9H20" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="file-details">
+                            <div class="file-name" id="receiverFileName">filename.pdf</div>
+                            <div class="file-size" id="receiverFileSize">2.4 MB</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-info">
+                        <svg class="progress-icon" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 34V10M24 34L14 24M24 34L34 24" stroke="#007AFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10 34V40C10 41.1046 10.8954 42 12 42H36C37.1046 42 38 41.1046 38 40V34" stroke="#007AFF" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <h3>Receiving file...</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="receiverProgressFill"></div>
+                        </div>
+                        <p class="progress-text" id="receiverProgressText">0%</p>
+                    </div>
+                </div>
+
+                <!-- Receiver Complete -->
+                <div id="receiverComplete" class="hidden">
+                    <svg class="success-icon" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="32" cy="32" r="28" stroke="#34C759" stroke-width="2"/>
+                        <path d="M20 32L28 40L44 24" stroke="#34C759" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h2>Download complete!</h2>
+                    <p>File saved to your downloads</p>
+                </div>
+            </div>
+
+            <!-- Error View -->
+            <div id="errorView" class="view hidden">
+                <svg class="error-icon" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="32" cy="32" r="28" stroke="#FF3B30" stroke-width="2"/>
+                    <path d="M32 20V32" stroke="#FF3B30" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="32" cy="42" r="1.5" fill="#FF3B30"/>
+                </svg>
+                <h2>Connection failed</h2>
+                <p id="errorMessage">Please try again</p>
+                <button class="primary-button" id="retryBtn">Try Again</button>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>End-to-end encrypted • No data stored • Open source</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
