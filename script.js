@@ -181,11 +181,28 @@ async function sendFile() {
   const metadata = JSON.stringify({ name: file.name, size: file.size });
   dc.send(metadata);
 
-  let offset = 0;
+  const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+  let offset = 0, chunkIndex = 0;
+
   while (offset < file.size) {
     const chunk = await file.slice(offset, offset + CHUNK_SIZE).arrayBuffer();
-    dc.send(chunk);
-    offset += CHUNK_SIZE;
+
+    // Wait if the buffer is too full
+    while (dc.bufferedAmount > 5 * CHUNK_SIZE) {
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
+    try {
+      dc.send(chunk);
+      offset += CHUNK_SIZE;
+      chunkIndex++;
+    } catch (err) {
+      console.warn('Send failed, retrying chunk...', err);
+      await new Promise(resolve => setTimeout(resolve, 200));
+      continue;
+    }
+
+    // Update progress
     const pct = Math.floor((offset / file.size) * 100);
     progressFill.style.width = pct + '%';
     progressText.textContent = pct + '%';
