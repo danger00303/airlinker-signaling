@@ -78,11 +78,46 @@
       pointer-events: none;
     }
 
-    .controls {
-      margin-top: 14px;
-      display: flex;
-      gap: 10px;
-    }
+.controls {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;         /* allows wrapping */
+  gap: 10px;
+}
+
+.controls button,
+.controls label {
+  flex: 1 1 calc(50% - 10px);     /* 2 items per row on mobile */
+  text-align: center;
+}
+
+/* On very small phones (<400px) force 100% full width */
+@media (max-width: 400px) {
+  .controls button,
+  .controls label {
+    flex: 1 1 100%;
+  }
+}
+
+/* Disable mobile tap highlight and focus outline */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+}
+
+button, a, label {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+::selection {
+  background: transparent !important;
+}
 
     button {
       background: var(--accent);
@@ -163,14 +198,16 @@ transform:scale(0.97);
       <canvas id="overlay"></canvas>
     </div>
 
-    <div class="controls">
-      <button id="startBtn">Start Camera</button>
-      <button id="stopBtn" class="ghost" disabled>Stop</button>
-      <label class="ghost" style="padding: 10px 16px; border-radius: 10px; cursor:pointer;">
-        Pick Image
-        <input id="fileInput" type="file" accept="image/*" style="display:none;" />
-      </label>
-    </div>
+<div class="controls">
+  <button id="startBtn">Start Camera</button>
+  <button id="flipBtn" class="ghost" disabled>Flip Camera</button>
+  <button id="stopBtn" class="ghost" disabled>Stop</button>
+
+  <label class="ghost" style="padding: 10px 16px; border-radius: 10px; cursor:pointer;">
+    Pick Image
+    <input id="fileInput" type="file" accept="image/*" style="display:none;" />
+  </label>
+</div>
 
     <div class="result-box">
       <div class="result-label">Scanned Result</div>
@@ -190,23 +227,28 @@ transform:scale(0.97);
       const resultBox = document.getElementById("result");
       const hidden = document.getElementById("hidden");
 
+    let currentFacing = "environment"; // default to back on mobile
+    const flipBtn = document.getElementById("flipBtn");
+
       let stream = null;
       let scanning = false;
       let ctx = overlay.getContext("2d");
 
 startBtn.onclick = async () => {
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: currentFacing }
+    });
+
     video.srcObject = stream;
 
-    // Wait until webcam actually starts
     await video.play();
 
     scanning = true;
     startBtn.disabled = true;
     stopBtn.disabled = false;
+    flipBtn.disabled = false; // enable flip
 
-    // Now video.videoWidth is guaranteed > 0
     scanLoop();
 
   } catch (err) {
@@ -222,6 +264,20 @@ startBtn.onclick = async () => {
         stopBtn.disabled = true;
         ctx.clearRect(0,0,overlay.width,overlay.height);
       };
+
+      flipBtn.onclick = async () => {
+  if (!stream) return;
+
+  // Stop old stream
+  stream.getTracks().forEach(t => t.stop());
+
+  // Switch facing mode
+  currentFacing = currentFacing === "environment" ? "user" : "environment";
+
+  // Restart camera
+  startBtn.onclick();
+};
+
 
 function scanLoop() {
   if (!scanning) return;

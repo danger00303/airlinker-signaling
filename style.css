@@ -480,3 +480,23 @@ footer p {
     color: #6b7280;
     margin-top: 4px;
 }
+
+/* Disable mobile tap highlight & selection */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+}
+
+button, a, label, .upload-area {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+::selection {
+  background: transparent !important;
+}
