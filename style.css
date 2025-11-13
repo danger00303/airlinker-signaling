@@ -458,3 +458,25 @@ footer p {
 #receiverProgressFill {
   transition: width 0.25s ease;
 }
+
+.scan-link {
+    margin-top: 8px;
+    display: inline-block;
+    color: #007AFF;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.scan-link:hover {
+    background: #f2f4f8;
+}
+
+.scan-note {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+}
