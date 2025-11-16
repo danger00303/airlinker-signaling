@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download TapClone - Formerly AirLinker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-blue: #007AFF;
+            --success-green: #34C759;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --background: #1a1a1a;
+            --surface: #2a2a2a;
+            --border: #3a3a3a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header with Brand Transition */
+        .brand-evolution {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .evolution-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .evolution-title svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .brand-transition-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .brand-box {
+            position: relative;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .old-brand {
+            text-align: center;
+            opacity: 0.6;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        .old-brand .logo-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            position: relative;
+        }
+
+        .old-brand .logo-icon svg {
+            filter: grayscale(0.5);
+        }
+
+        .old-brand h2 {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: line-through;
+        }
+
+        .old-brand .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .arrow-transition {
+            font-size: 48px;
+            color: var(--primary-blue);
+            animation: bounceRight 2s ease-in-out infinite;
+        }
+
+        @keyframes bounceRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        .new-brand {
+            text-align: center;
+            animation: fadeInScale 0.8s ease-out 0.3s backwards;
+        }
+
+        .new-brand .logo-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 40px rgba(0, 122, 255, 0.4);
+            position: relative;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .new-brand .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+            animation: pulse-ring 2s ease-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1.8);
+                opacity: 0;
+            }
+        }
+
+        .inner-circle {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 50%;
+            animation: innerPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes innerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.85); }
+        }
+
+        .new-brand h2 {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #007AFF 0%, #00D4FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .new-brand .label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #34C759 0%, #30D158 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .new-brand .label svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .tagline {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Main Card */
+        .download-card {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            animation: slideUp 0.8s ease-out 0.4s backwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Download Options */
+        .download-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .download-option {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid var(--border);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .download-option:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-blue);
+            box-shadow: 0 20px 40px rgba(0, 122, 255, 0.2);
+        }
+
+        .download-option:hover::before {
+            opacity: 1;
+        }
+
+        .platform-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: float 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        .platform-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .download-option:nth-child(2) .platform-icon {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .platform-name {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .platform-desc {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .download-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 122, 255, 0.4);
+        }
+
+        .download-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Features Section */
+        .features {
+            margin-top: 50px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .features-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 20px;
+            animation: fadeInScale 0.6s ease-out backwards;
+        }
+
+        .feature:nth-child(1) { animation-delay: 0.6s; }
+        .feature:nth-child(2) { animation-delay: 0.7s; }
+        .feature:nth-child(3) { animation-delay: 0.8s; }
+        .feature:nth-child(4) { animation-delay: 0.9s; }
+
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .feature h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Web Version Link */
+        .web-version {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+        }
+
+        .web-version p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .web-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 24px;
+            border: 2px solid var(--primary-blue);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .web-link svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s;
+        }
+
+        .web-link:hover svg {
+            transform: translateX(4px);
+        }
+
+        .web-link:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 122, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .brand-transition-wrapper {
+                gap: 20px;
+            }
+
+            .old-brand .logo-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .new-brand .logo-icon {
+                width: 80px;
+                height: 80px;
+            }
+
+            .inner-circle {
+                width: 35px;
+                height: 35px;
+            }
+
+            .old-brand h2 {
+                font-size: 24px;
+            }
+
+            .new-brand h2 {
+                font-size: 36px;
+            }
+
+            .arrow-transition {
+                font-size: 32px;
+            }
+
+            .download-card {
+                padding: 30px 20px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .download-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Brand Evolution Header -->
+        <div class="brand-evolution">
+            <p class="evolution-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#FFB800" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Brand Evolution
+            </p>
+            
+            <div class="brand-transition-wrapper">
+                <!-- Old Brand -->
+                <div class="brand-box old-brand">
+                    <div class="logo-icon">
+                        <svg width="80" height="80" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 4L4 10V22L16 28L28 22V10L16 4Z" stroke="#007AFF" stroke-width="1.5" stroke-linejoin="round"/>
+                            <path d="M16 16L4 10" stroke="#007AFF" stroke-width="1.5" stroke-linejoin="round"/>
+                            <path d="M16 16V28" stroke="#007AFF" stroke-width="1.5" stroke-linejoin="round"/>
+                            <path d="M16 16L28 10" stroke="#007AFF" stroke-width="1.5" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h2>AirLinker</h2>
+                    <p class="label">Web Version</p>
+                </div>
+
+                <!-- Arrow -->
+                <div class="arrow-transition">→</div>
+
+                <!-- New Brand -->
+                <div class="brand-box new-brand">
+                    <div class="logo-icon">
+                        <div class="inner-circle"></div>
+                    </div>
+                    <h2>TapClone</h2>
+                    <p class="label">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="white" stroke="white" stroke-width="2"/>
+                            <path d="M8 12L10 14L16 8" stroke="#34C759" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Native Apps Available
+                    </p>
+                </div>
+            </div>
+
+            <p class="tagline">
+                Same secure file transfer you love, now with a fresh identity and native desktop & mobile apps
+            </p>
+        </div>
+
+        <!-- Download Card -->
+        <div class="download-card">
+            <h2 class="section-title">Download TapClone</h2>
+            <p class="section-subtitle">
+                Get the native app experience with faster transfers, better performance, and seamless integration
+            </p>
+
+            <div class="download-options">
+                <!-- Windows -->
+                <div class="download-option">
+                    <div class="platform-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 5.5L9.5 4.5V11.5H3V5.5Z" fill="#007AFF"/>
+                            <path d="M10.5 4.3L21 3V11.5H10.5V4.3Z" fill="#007AFF"/>
+                            <path d="M3 12.5H9.5V19.5L3 18.5V12.5Z" fill="#007AFF"/>
+                            <path d="M10.5 12.5H21V21L10.5 19.7V12.5Z" fill="#007AFF"/>
+                        </svg>
+                    </div>
+                    <h3 class="platform-name">Windows</h3>
+                    <p class="platform-desc">Windows 10 & 11 (64-bit)</p>
+                    <button class="download-btn" onclick="downloadWindows()">
+                        <span>
+                            <svg style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 8px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 16L7 11L8.4 9.6L11 12.2V4H13V12.2L15.6 9.6L17 11L12 16Z" fill="white"/>
+                                <path d="M20 16V20H4V16H2V20C2 21.1 2.9 22 4 22H20C21.1 22 22 21.1 22 20V16H20Z" fill="white"/>
+                            </svg>
+                            Download for Windows
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Android -->
+                <div class="download-option">
+                    <div class="platform-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 18C6 18.55 6.45 19 7 19H8V22.5C8 23.33 8.67 24 9.5 24C10.33 24 11 23.33 11 22.5V19H13V22.5C13 23.33 13.67 24 14.5 24C15.33 24 16 23.33 16 22.5V19H17C17.55 19 18 18.55 18 18V8H6V18Z" fill="#34C759"/>
+                            <path d="M3.5 8C2.67 8 2 8.67 2 9.5V16.5C2 17.33 2.67 18 3.5 18C4.33 18 5 17.33 5 16.5V9.5C5 8.67 4.33 8 3.5 8Z" fill="#34C759"/>
+                            <path d="M20.5 8C19.67 8 19 8.67 19 9.5V16.5C19 17.33 19.67 18 20.5 18C21.33 18 22 17.33 22 16.5V9.5C22 8.67 21.33 8 20.5 8Z" fill="#34C759"/>
+                            <path d="M15.53 2.16L16.83 0.86C17.03 0.66 17.03 0.35 16.83 0.15C16.63 -0.05 16.32 -0.05 16.12 0.15L14.64 1.63C13.85 1.23 12.95 1 12 1C11.04 1 10.14 1.23 9.34 1.63L7.85 0.15C7.65 -0.05 7.34 -0.05 7.14 0.15C6.94 0.35 6.94 0.66 7.14 0.86L8.45 2.17C6.97 3.26 6 5.01 6 7H18C18 5.01 17.03 3.25 15.53 2.16ZM10 5H9V4H10V5ZM15 5H14V4H15V5Z" fill="#34C759"/>
+                        </svg>
+                    </div>
+                    <h3 class="platform-name">Android</h3>
+                    <p class="platform-desc">Android 8.0 and above</p>
+                    <button class="download-btn" onclick="downloadAndroid()">
+                        <span>
+                            <svg style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 8px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 16L7 11L8.4 9.6L11 12.2V4H13V12.2L15.6 9.6L17 11L12 16Z" fill="white"/>
+                                <path d="M20 16V20H4V16H2V20C2 21.1 2.9 22 4 22H20C21.1 22 22 21.1 22 20V16H20Z" fill="white"/>
+                            </svg>
+                            Download APK
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="features">
+                <h3 class="features-title">Why upgrade to TapClone?</h3>
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#FFB800" stroke="#FFB800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Faster Transfers</h3>
+                        <p>Native performance for lightning-quick file sharing</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="5" y="11" width="14" height="10" rx="2" stroke="#007AFF" stroke-width="2" fill="none"/>
+                                <path d="M8 11V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V11" stroke="#007AFF" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="12" cy="16" r="1.5" fill="#007AFF"/>
+                            </svg>
+                        </div>
+                        <h3>Same Security</h3>
+                        <p>End-to-end encryption you trust</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="5" y="2" width="14" height="20" rx="2" stroke="#34C759" stroke-width="2" fill="none"/>
+                                <path d="M9 18H15" stroke="#34C759" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="12" cy="6" r="1" fill="#34C759"/>
+                                <circle cx="12" cy="10" r="1" fill="#34C759"/>
+                                <circle cx="12" cy="14" r="1" fill="#34C759"/>
+                            </svg>
+                        </div>
+                        <h3>Better Integration</h3>
+                        <p>Seamlessly integrated with your system</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 7L12 3L4 7M20 7L12 11M20 7V17L12 21M12 11L4 7M12 11V21M4 7V17L12 21" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Modern Design</h3>
+                        <p>Beautiful, intuitive interface</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Web Version Link -->
+            <div class="web-version">
+                <p>Prefer the browser version?</p>
+                <a href="index.html" class="web-link">
+                    Continue with Web Version
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadWindows() {
+            // Show animation
+            const btn = event.target.closest('.download-btn');
+            btn.innerHTML = '<span style="display: flex; align-items: center; justify-content: center; gap: 8px;"><svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 12L20 20L4 20L4 12" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="8" stroke="white" stroke-width="2" fill="none"/><path d="M9 12L12 15L15 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Starting download...</span>';
+            
+            setTimeout(() => {
+                // Start actual download
+                const link = document.createElement('a');
+                link.href = 'TapClone Setup 1.0.0.exe';
+                link.download = 'TapClone Setup 1.0.0.exe';
+                link.click();
+                
+                btn.innerHTML = '<span><svg style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 8px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.6L11 12.2V4H13V12.2L15.6 9.6L17 11L12 16Z" fill="white"/><path d="M20 16V20H4V16H2V20C2 21.1 2.9 22 4 22H20C21.1 22 22 21.1 22 20V16H20Z" fill="white"/></svg>Download for Windows</span>';
+            }, 1500);
+        }
+
+        function downloadAndroid() {
+            // Show animation
+            const btn = event.target.closest('.download-btn');
+            btn.innerHTML = '<span style="display: flex; align-items: center; justify-content: center; gap: 8px;"><svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 12L20 20L4 20L4 12" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="8" stroke="white" stroke-width="2" fill="none"/><path d="M9 12L12 15L15 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Starting download...</span>';
+            
+            setTimeout(() => {
+                // Start actual download
+                const link = document.createElement('a');
+                link.href = 'TapClone.apk';
+                link.download = 'TapClone.apk';
+                link.click();
+                
+                btn.innerHTML = '<span><svg style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 8px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16L7 11L8.4 9.6L11 12.2V4H13V12.2L15.6 9.6L17 11L12 16Z" fill="white"/><path d="M20 16V20H4V16H2V20C2 21.1 2.9 22 4 22H20C21.1 22 22 21.1 22 20V16H20Z" fill="white"/></svg>Download APK</span>';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

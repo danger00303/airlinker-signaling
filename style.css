@@ -500,3 +500,18 @@ button, a, label, .upload-area {
 ::selection {
   background: transparent !important;
 }
+.download-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 18px;
+    background: #007AFF;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.download-btn:hover {
+    opacity: 0.85;
+}
